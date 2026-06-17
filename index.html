@@ -802,7 +802,7 @@ function initSolar() {
   grid.innerHTML = planets.map((p, i) => `
     <div class="planet-card">
       <div class="planet-render">
-        <video src="planets/${p.class}.mp4" autoplay muted loop playsinline
+        <video src="planets/${p.class}_animation.mp4" autoplay muted loop playsinline
                onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"></video>
         <div class="planet-orb-wrap" style="display:none;">
           ${p.class === 'saturn'
