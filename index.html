@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rotoscoping — MMA Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:    #050608;
+  --navy-900: #060c1a;
+  --navy-800: #0a1428;
+  --navy-700: #0d1c38;
+  --navy-600: #112248;
+  --navy-500: #1a3460;
+  --navy-400: #1e3f78;
+  --blue:     #1e6fff;
+  --blue-lt:  #4d8fff;
+  --cyan:     #00c8ff;
+  --silver:   #8aa0c0;
+  --steel:    #4a6080;
+  --white:    #e8edf5;
+  --dim:      #1e2d45;
+  --glow:     rgba(0,200,255,0.12);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--black);
+  color:var(--white);
+  font-family:'Rajdhani',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;border:none;background:none;font-family:inherit;color:inherit;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--navy-900);}
+::-webkit-scrollbar-thumb{background:var(--navy-500);border-radius:2px;}
+
+/* ── STARS ── */
+.stars{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(1px 1px at 8% 12%, rgba(255,255,255,0.55) 0%,transparent 100%),
+    radial-gradient(1px 1px at 22% 38%, rgba(255,255,255,0.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 37% 8%, rgba(255,255,255,0.45) 0%,transparent 100%),
+    radial-gradient(1px 1px at 52% 58%, rgba(255,255,255,0.3) 0%,transparent 100%),
+    radial-gradient(1px 1px at 68% 22%, rgba(255,255,255,0.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 83% 48%, rgba(255,255,255,0.35) 0%,transparent 100%),
+    radial-gradient(1px 1px at 91% 78%, rgba(255,255,255,0.45) 0%,transparent 100%),
+    radial-gradient(1px 1px at 14% 68%, rgba(255,255,255,0.3) 0%,transparent 100%),
+    radial-gradient(1px 1px at 58% 82%, rgba(255,255,255,0.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 33% 88%, rgba(255,255,255,0.25) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 76% 14%, rgba(180,210,255,0.6) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 45% 30%, rgba(180,210,255,0.45) 0%,transparent 100%),
+    radial-gradient(2px 2px at 17% 52%, rgba(0,200,255,0.35) 0%,transparent 100%),
+    radial-gradient(2px 2px at 61% 17%, rgba(0,200,255,0.28) 0%,transparent 100%),
+    radial-gradient(1px 1px at 4% 44%, rgba(255,255,255,0.2) 0%,transparent 100%),
+    radial-gradient(1px 1px at 96% 33%, rgba(255,255,255,0.3) 0%,transparent 100%);
+}
+
+/* ── NAV ── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:linear-gradient(to bottom,rgba(5,6,8,0.97) 0%,rgba(6,12,26,0.93) 100%);
+  border-bottom:1px solid rgba(30,111,255,0.18);
+  backdrop-filter:blur(14px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 52px;height:64px;
+}
+.nav-logo{
+  font-family:'Rajdhani',sans-serif;font-weight:700;
+  font-size:1.25rem;letter-spacing:0.28em;text-transform:uppercase;
+  color:var(--cyan);display:flex;align-items:center;gap:10px;
+}
+.nav-logo-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--blue);box-shadow:0 0 8px var(--blue);
+}
+.nav-logo .lo-white{color:var(--white);}
+.nav-links{display:flex;align-items:center;list-style:none;gap:2px;}
+.nav-links li{position:relative;}
+.nav-links li>a,.nav-links li>button{
+  display:block;padding:8px 18px;
+  font-size:0.75rem;letter-spacing:0.18em;text-transform:uppercase;
+  font-weight:600;color:var(--silver);
+  transition:color 0.2s;background:none;border:none;
+}
+.nav-links li>a:hover,.nav-links li>button:hover,
+.nav-links li>a.active,.nav-links li>button.active{color:var(--cyan);}
+.nav-links li>a.active::after{
+  content:'';position:absolute;bottom:-1px;left:18px;right:18px;
+  height:2px;background:var(--cyan);box-shadow:0 0 10px rgba(0,200,255,0.6);
+}
+.nav-dropdown{
+  position:absolute;top:calc(100% + 1px);left:0;
+  min-width:230px;
+  background:rgba(6,12,26,0.98);
+  border:1px solid rgba(30,111,255,0.22);
+  border-top:2px solid var(--cyan);
+  opacity:0;pointer-events:none;
+  transform:translateY(8px);
+  transition:opacity 0.2s,transform 0.2s;
+  z-index:1001;backdrop-filter:blur(14px);
+}
+.nav-dropdown.open{opacity:1;pointer-events:all;transform:translateY(0);}
+.nav-dropdown a{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 18px;
+  font-size:0.7rem;letter-spacing:0.1em;
+  color:var(--silver);font-weight:500;
+  border-bottom:1px solid rgba(30,45,69,0.6);
+  transition:background 0.15s,color 0.15s;
+}
+.nav-dropdown a:last-child{border-bottom:none;}
+.nav-dropdown a:hover{background:rgba(30,111,255,0.08);color:var(--white);}
+.nav-dropdown .wk-num{
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.65rem;color:var(--blue-lt);min-width:32px;
+}
+
+/* ── PAGES ── */
+.page{display:none;min-height:100vh;padding-top:64px;}
+.page.active{display:block;}
+
+/* ── FADE IN ── */
+.fi{opacity:0;transform:translateY(22px);animation:fadeUp 0.55s ease forwards;}
+.fi1{animation-delay:0.05s;}.fi2{animation-delay:0.13s;}.fi3{animation-delay:0.21s;}
+.fi4{animation-delay:0.29s;}.fi5{animation-delay:0.37s;}.fi6{animation-delay:0.45s;}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+
+/* ═══════════════════ HOME ═══════════════════ */
+.home-hero{
+  position:relative;z-index:2;
+  min-height:calc(100vh - 64px);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:80px 80px 100px;overflow:hidden;
+}
+.home-glow{position:absolute;pointer-events:none;border-radius:50%;}
+.home-glow-1{width:700px;height:700px;background:radial-gradient(circle,rgba(30,111,255,0.07) 0%,transparent 70%);top:-150px;right:-150px;}
+.home-glow-2{width:450px;height:450px;background:radial-gradient(circle,rgba(0,200,255,0.05) 0%,transparent 70%);bottom:80px;left:5%;}
+.home-eyebrow{font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.35em;color:var(--cyan);text-transform:uppercase;margin-bottom:28px;display:flex;align-items:center;gap:14px;}
+.home-eyebrow::before{content:'';width:44px;height:1px;background:var(--cyan);box-shadow:0 0 6px var(--cyan);}
+.home-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:clamp(4.5rem,11vw,10rem);line-height:0.88;letter-spacing:-0.01em;margin-bottom:36px;}
+.home-title .line1{display:block;color:var(--white);}
+.home-title .line2{display:block;background:linear-gradient(135deg,var(--blue) 0%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.home-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.35rem;color:var(--silver);max-width:540px;line-height:1.75;margin-bottom:56px;}
+.home-btns{display:flex;gap:16px;flex-wrap:wrap;}
+.btn-primary{padding:14px 40px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-lt) 100%);color:var(--white);font-weight:700;font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:opacity 0.2s,transform 0.2s;box-shadow:0 0 28px rgba(30,111,255,0.32);}
+.btn-primary:hover{opacity:0.82;transform:translateY(-2px);}
+.btn-secondary{padding:13px 40px;background:transparent;color:var(--cyan);font-weight:600;font-size:0.76rem;letter-spacing:0.22em;text-transform:uppercase;border:1px solid rgba(0,200,255,0.38);clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:background 0.2s,border-color 0.2s;}
+.btn-secondary:hover{background:rgba(0,200,255,0.07);border-color:var(--cyan);}
+.home-stats{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(30,111,255,0.15);}
+.stat-item{padding:38px 44px;border-right:1px solid rgba(30,111,255,0.12);background:rgba(6,12,26,0.4);}
+.stat-item:last-child{border-right:none;}
+.stat-num{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:3.2rem;line-height:1;background:linear-gradient(135deg,var(--blue-lt),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-label{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--steel);margin-top:6px;font-weight:600;}
+
+/* ═══════════════════ ABOUT ═══════════════════ */
+#page-about{background:linear-gradient(180deg,var(--black) 0%,var(--navy-900) 100%);}
+.section-header{padding:80px 80px 56px;border-bottom:1px solid var(--dim);position:relative;overflow:hidden;}
+.section-header .bg-text{position:absolute;right:-10px;top:10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16rem;line-height:1;letter-spacing:-0.05em;color:rgba(30,111,255,0.03);pointer-events:none;user-select:none;}
+.page-eyebrow{font-family:'Share Tech Mono',monospace;font-size:0.66rem;letter-spacing:0.35em;color:var(--cyan);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.page-eyebrow::before{content:'';width:26px;height:1px;background:var(--cyan);}
+.page-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:clamp(2.6rem,6vw,5.2rem);line-height:1;letter-spacing:0.02em;margin-bottom:20px;}
+.page-title .acc{background:linear-gradient(135deg,var(--blue-lt),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.page-lead{font-family:'Cormorant Garamond',serif;font-size:1.1rem;line-height:1.8;color:var(--silver);max-width:580px;}
+.about-blocks{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--dim);border-top:2px solid var(--dim);}
+.about-block{background:var(--navy-900);padding:52px 56px;}
+.about-block:nth-child(even){background:rgba(6,12,26,0.55);}
+.about-icon{font-size:2rem;margin-bottom:18px;display:block;}
+.about-block h2{font-size:1.15rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--white);margin-bottom:16px;}
+.about-block p{font-family:'Cormorant Garamond',serif;font-size:1.05rem;line-height:1.85;color:var(--silver);}
+.about-block p+p{margin-top:12px;}
+.about-block strong{color:var(--white);font-style:italic;}
+.about-course{margin:56px 80px;background:linear-gradient(135deg,rgba(10,20,40,0.85),rgba(6,12,26,0.95));border:1px solid rgba(30,111,255,0.22);border-left:3px solid var(--cyan);padding:40px 48px;display:grid;grid-template-columns:repeat(3,1fr);gap:40px;position:relative;overflow:hidden;}
+.about-course::before{content:'';position:absolute;top:0;right:0;width:240px;height:240px;background:radial-gradient(circle,rgba(0,200,255,0.04) 0%,transparent 70%);}
+.cd-label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.22em;color:var(--steel);text-transform:uppercase;margin-bottom:5px;}
+.cd-val{font-size:1.05rem;font-weight:600;color:var(--white);}
+.about-tl{padding:56px 80px 80px;}
+.about-tl h2{font-size:1.4rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:36px;color:var(--white);}
+.tl-wrap{position:relative;padding-left:28px;}
+.tl-wrap::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:linear-gradient(to bottom,var(--blue),transparent);}
+.tl-row{position:relative;padding:0 0 32px 38px;display:grid;grid-template-columns:110px 1fr;gap:20px;}
+.tl-row::before{content:'';position:absolute;left:-4.5px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--navy-900);border:2px solid var(--blue);box-shadow:0 0 10px rgba(30,111,255,0.5);}
+.tl-wk{font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:var(--blue-lt);letter-spacing:0.14em;padding-top:3px;}
+.tl-txt{font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.8;color:var(--silver);}
+.tl-txt strong{color:var(--white);}
+
+/* ═══════════════════ SOLAR — VIDEO HEADER ═══════════════════ */
+#page-solar{background:var(--black);}
+
+/* Solar hero with video background */
+.solar-hero{
+  position:relative;
+  height:520px;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.solar-hero-video{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;
+  z-index:0;
+  filter:brightness(0.55) saturate(1.2);
+}
+.solar-hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(5,6,8,0.35) 0%,rgba(5,6,8,0.0) 40%,rgba(5,6,8,0.75) 80%,var(--black) 100%);
+  z-index:1;
+}
+.solar-hero-content{
+  position:relative;z-index:2;
+  text-align:center;
+  padding:0 32px;
+}
+.solar-hero-content .page-eyebrow{justify-content:center;}
+.solar-hero-content .page-eyebrow::before{display:none;}
+.solar-hero-content .page-title{font-size:clamp(3rem,8vw,6.5rem);margin-bottom:16px;}
+.solar-hero-content .page-lead{margin:0 auto;text-align:center;}
+
+/* ═══════════════════ SOLAR — PLANETS GRID (HOVER EXPAND) ═══════════════════ */
+
+/* Taurus constellation SVG background */
+.solar-bg{
+  position:relative;
+  background:var(--black);
+  overflow:hidden;
+}
+.constellation-bg{
+  position:absolute;inset:0;
+  pointer-events:none;z-index:0;
+  opacity:0.55;
+}
+
+/* The planets container */
+.planets-grid{
+  position:relative;z-index:1;
+  display:flex;
+  align-items:stretch;
+  background:rgba(5,6,8,0.7);
+  min-height:520px;
+  transition:all 0.5s ease;
+}
+
+.planet-card{
+  flex:1;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  transition:flex 0.55s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s;
+  border-right:1px solid rgba(30,111,255,0.12);
+  min-width:48px;
+}
+.planet-card:last-child{border-right:none;}
+
+/* When grid has a hovered card, non-hovered shrink */
+.planets-grid:has(.planet-card:hover) .planet-card:not(:hover){
+  flex:0.18;
+}
+.planets-grid:has(.planet-card:hover) .planet-card:hover{
+  flex:4;
+  box-shadow:0 0 60px rgba(0,200,255,0.18), inset 0 0 80px rgba(0,0,0,0.4);
+}
+
+/* Planet video/orb fill */
+.planet-render{
+  position:absolute;inset:0;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.planet-render video{
+  width:100%;height:100%;
+  object-fit:cover;
+  filter:brightness(0.8) saturate(1.15);
+  transition:filter 0.4s;
+}
+.planet-card:hover .planet-render video{
+  filter:brightness(1.1) saturate(1.3);
+}
+/* Fallback orb when no video */
+.planet-orb-wrap{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--navy-800),#060d1e);
+}
+.orb{border-radius:50%;box-shadow:inset -12px -6px 30px rgba(0,0,0,0.8);}
+.orb-mercury{width:72px;height:72px;background:radial-gradient(circle at 35% 35%,#c8b8a0,#6a5840 55%,#1e1510);}
+.orb-venus{width:82px;height:82px;background:radial-gradient(circle at 35% 35%,#f0d890,#c07820 50%,#3a1a00);}
+.orb-earth{width:88px;height:88px;background:radial-gradient(circle at 38% 32%,#60c8f0,#1a70b0 45%,#0a2850);box-shadow:inset -12px -6px 30px rgba(0,0,0,0.7),0 0 30px rgba(30,150,220,0.15);}
+.orb-mars{width:74px;height:74px;background:radial-gradient(circle at 35% 35%,#d06040,#802010 55%,#200800);}
+.orb-jupiter{width:104px;height:104px;background:radial-gradient(circle at 38% 30%,#f0c880,#c07830 45%,#401800);}
+.orb-saturn{width:96px;height:96px;background:radial-gradient(circle at 36% 34%,#f0d898,#b07028 50%,#381500);}
+.orb-uranus{width:80px;height:80px;background:radial-gradient(circle at 36% 34%,#90d8e8,#2090a8 50%,#082838);}
+.orb-neptune{width:76px;height:76px;background:radial-gradient(circle at 35% 35%,#6090f8,#1040c0 55%,#04102a);}
+.saturn-wrap{position:relative;display:flex;align-items:center;justify-content:center;}
+.saturn-wrap::after{content:'';position:absolute;width:160px;height:30px;border:2px solid rgba(240,208,152,0.28);border-radius:50%;top:50%;transform:translateY(-50%) rotate(-18deg);pointer-events:none;}
+
+/* Gradient overlay on card */
+.planet-card-overlay{
+  position:absolute;inset:0;z-index:2;
+  background:linear-gradient(to top,rgba(5,6,8,0.95) 0%,rgba(5,6,8,0.3) 45%,transparent 100%);
+  transition:background 0.4s;
+}
+.planet-card:hover .planet-card-overlay{
+  background:linear-gradient(to top,rgba(5,6,8,0.85) 0%,rgba(5,6,8,0.1) 55%,transparent 100%);
+}
+
+/* Collapsed label (rotated, shown when not hovered) */
+.planet-side-label{
+  position:absolute;
+  bottom:24px;left:50%;
+  transform:translateX(-50%) rotate(-90deg);
+  transform-origin:center center;
+  z-index:3;
+  font-family:'Rajdhani',sans-serif;font-weight:700;
+  font-size:0.65rem;letter-spacing:0.28em;text-transform:uppercase;
+  color:var(--steel);
+  white-space:nowrap;
+  transition:opacity 0.3s;
+  pointer-events:none;
+}
+.planet-card:hover .planet-side-label{opacity:0;}
+.planets-grid:has(.planet-card:hover) .planet-card:not(:hover) .planet-side-label{opacity:1;}
+
+/* Expanded info (shown on hover) */
+.planet-info-expanded{
+  position:absolute;bottom:0;left:0;right:0;z-index:4;
+  padding:28px 28px 24px;
+  opacity:0;transform:translateY(12px);
+  transition:opacity 0.35s 0.1s, transform 0.35s 0.1s;
+  pointer-events:none;
+}
+.planet-card:hover .planet-info-expanded{
+  opacity:1;transform:translateY(0);
+  pointer-events:all;
+}
+.planet-name-exp{
+  font-family:'Rajdhani',sans-serif;font-weight:700;
+  font-size:2rem;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--white);line-height:1;margin-bottom:4px;
+}
+.planet-type-exp{
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.56rem;letter-spacing:0.2em;color:var(--cyan);text-transform:uppercase;
+  margin-bottom:12px;
+}
+.planet-desc-exp{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1rem;line-height:1.7;color:var(--silver);margin-bottom:14px;
+  max-width:340px;
+}
+.planet-fact-exp{
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.56rem;letter-spacing:0.12em;color:var(--steel);
+  margin-bottom:16px;
+}
+
+/* Age calculator in expanded state */
+.age-calc-exp{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.age-calc-exp input{
+  width:90px;padding:7px 10px;
+  background:rgba(6,12,26,0.9);
+  border:1px solid var(--steel);border-radius:0;
+  color:var(--white);
+  font-family:'Share Tech Mono',monospace;font-size:0.7rem;
+  outline:none;
+  transition:border-color 0.2s;
+}
+.age-calc-exp input:focus{border-color:var(--cyan);}
+.age-calc-exp input::placeholder{color:var(--steel);}
+.age-calc-exp .age-label{
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.62rem;color:var(--steel);letter-spacing:0.12em;
+}
+.age-result-exp{
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.7rem;color:var(--cyan);
+  min-width:80px;
+}
+
+/* blender tag */
+.blender-tag{
+  position:absolute;top:10px;right:10px;z-index:5;
+  background:rgba(6,12,26,0.88);
+  border:1px solid rgba(255,130,20,0.4);
+  padding:3px 8px;
+  font-family:'Share Tech Mono',monospace;
+  font-size:0.48rem;letter-spacing:0.14em;color:rgba(255,160,60,0.85);
+  text-transform:uppercase;
+}
+
+.solar-note{
+  margin:44px 80px;
+  padding:22px 30px;
+  background:rgba(30,111,255,0.04);
+  border:1px solid rgba(30,111,255,0.2);
+  border-left:3px solid var(--blue);
+  font-family:'Cormorant Garamond',serif;
+  font-size:0.95rem;line-height:1.75;color:var(--silver);
+}
+.solar-note strong{color:var(--white);}
+.solar-note code{font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--cyan);background:rgba(0,200,255,0.07);padding:1px 5px;border-radius:2px;}
+
+/* ═══════════════════ WEEK ═══════════════════ */
+#page-week{background:var(--black);}
+.week-top{
+  padding:60px 80px 40px;border-bottom:1px solid var(--dim);
+  display:grid;grid-template-columns:1fr auto;gap:32px;align-items:end;
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,var(--navy-900) 0%,var(--black) 100%);
+}
+.week-top::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(30,111,255,0.05) 0%,transparent 55%);pointer-events:none;}
+.week-lbl{font-family:'Share Tech Mono',monospace;font-size:0.63rem;letter-spacing:0.35em;color:var(--cyan);display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.week-lbl::before{content:'';width:22px;height:1px;background:var(--cyan);}
+.week-h1{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:clamp(2rem,5vw,4rem);line-height:1;letter-spacing:0.04em;color:var(--white);}
+.week-h1 .acc{background:linear-gradient(135deg,var(--blue-lt),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.week-nav-row{display:flex;gap:8px;padding-bottom:4px;position:relative;z-index:2;}
+.wnav-btn{padding:10px 24px;border:1px solid var(--dim);background:transparent;color:var(--silver);font-size:0.66rem;letter-spacing:0.18em;text-transform:uppercase;font-weight:600;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);transition:border-color 0.2s,color 0.2s,background 0.2s;}
+.wnav-btn:hover{border-color:var(--blue);color:var(--cyan);background:rgba(30,111,255,0.06);}
+.wnav-btn:disabled{opacity:0.28;cursor:not-allowed;}
+.prog-strip{display:grid;grid-template-columns:repeat(12,1fr);height:5px;gap:2px;background:var(--black);}
+.prog-seg{background:var(--dim);transition:background 0.3s;}
+.prog-seg.done{background:var(--blue);}
+.prog-seg.cur{background:linear-gradient(90deg,var(--blue),var(--cyan));box-shadow:0 0 8px rgba(0,200,255,0.5);}
+.week-body{padding:48px 80px;display:grid;grid-template-columns:1.25fr 1fr;gap:48px;align-items:start;}
+.vid-wrap{background:var(--navy-900);border:1px solid var(--dim);position:relative;}
+.vid-tag{position:absolute;top:0;left:0;z-index:2;background:rgba(0,200,255,0.1);border:1px solid rgba(0,200,255,0.25);border-left:none;border-top:none;padding:4px 12px;font-family:'Share Tech Mono',monospace;font-size:0.5rem;letter-spacing:0.2em;color:var(--cyan);}
+.vid-ratio{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;}
+.vid-ratio iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
+.vid-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--navy-800);}
+.play-ring{width:62px;height:62px;border-radius:50%;border:2px solid rgba(0,200,255,0.4);display:flex;align-items:center;justify-content:center;color:var(--cyan);font-size:1.4rem;padding-left:5px;}
+.vid-ph p{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.18em;color:var(--steel);text-align:center;line-height:1.9;}
+.week-cards{display:flex;flex-direction:column;gap:20px;}
+.wcard{background:var(--navy-900);border:1px solid var(--dim);border-left:2px solid var(--blue);padding:22px 24px;}
+.wcard h2{font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:11px;font-weight:700;}
+.wcard p{font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.8;color:var(--silver);}
+.week-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.wtag{padding:4px 10px;font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;border:1px solid var(--dim);color:var(--silver);background:rgba(10,20,40,0.65);}
+.week-all{padding:36px 80px 60px;border-top:1px solid var(--dim);}
+.week-all h2{font-size:0.66rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--steel);margin-bottom:20px;font-weight:600;}
+.week-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;}
+.wg-item{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;transition:opacity 0.2s;}
+.wg-item:hover{opacity:0.72;}
+.wg-box{width:100%;height:38px;background:var(--navy-700);border:1px solid var(--dim);display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:0.56rem;color:var(--steel);transition:background 0.2s,border-color 0.2s,color 0.2s;clip-path:polygon(4px 0%,100% 0%,calc(100% - 4px) 100%,0% 100%);}
+.wg-box.done{background:rgba(30,111,255,0.08);border-color:rgba(30,111,255,0.28);color:var(--blue-lt);}
+.wg-box.cur{background:rgba(30,111,255,0.18);border-color:var(--blue);color:var(--cyan);box-shadow:0 0 10px rgba(30,111,255,0.22);}
+.wg-lbl{font-size:0.46rem;letter-spacing:0.1em;color:var(--steel);text-align:center;line-height:1.3;}
+
+/* ═══════════════════ FOOTER ═══════════════════ */
+footer{background:var(--navy-900);border-top:1px solid var(--dim);padding:30px 80px;display:flex;justify-content:space-between;align-items:center;}
+.footer-brand{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.95rem;letter-spacing:0.28em;color:var(--cyan);}
+.footer-info{font-family:'Share Tech Mono',monospace;font-size:0.56rem;letter-spacing:0.14em;color:var(--steel);text-align:right;}
+
+/* ═══════════════════ RESPONSIVE ═══════════════════ */
+@media(max-width:1100px){
+  .home-stats{grid-template-columns:repeat(2,1fr);}
+  .planets-grid{flex-wrap:wrap;}
+  .planet-card{flex:1 1 calc(25% - 2px);min-height:380px;}
+  .planets-grid:has(.planet-card:hover) .planet-card:not(:hover){flex:1 1 calc(25% - 2px);}
+  .planets-grid:has(.planet-card:hover) .planet-card:hover{flex:1 1 calc(50% - 2px);}
+}
+@media(max-width:900px){
+  #nav{padding:0 24px;}
+  .home-hero,.section-header{padding:60px 32px 44px;}
+  .about-blocks{grid-template-columns:1fr;}
+  .week-body{grid-template-columns:1fr;padding:32px;}
+  .about-course{grid-template-columns:1fr 1fr;margin:32px;}
+  .about-tl,.week-all,.solar-note{padding:40px 32px;}
+  .week-top{padding:40px 32px 32px;}
+  footer{padding:24px 32px;flex-direction:column;gap:12px;text-align:center;}
+  .planets-grid{flex-wrap:wrap;}
+  .planet-card{flex:1 1 calc(50% - 1px);min-height:340px;}
+}
+@media(max-width:640px){
+  .week-top{grid-template-columns:1fr;}
+  .week-grid{grid-template-columns:repeat(6,1fr);}
+  .home-stats .stat-item{padding:24px 20px;}
+  .about-course{grid-template-columns:1fr;margin:24px;}
+  .planets-grid{flex-direction:column;}
+  .planet-card{flex:none;height:380px;}
+}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav id="nav">
+  <div class="nav-logo">
+    <div class="nav-logo-dot"></div>
+    MMA<span class="lo-white">PORTFOLIO</span>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#" class="active" data-page="home" onclick="return goPage('home')">Home</a></li>
+    <li><a href="#" data-page="about" onclick="return goPage('about')">About</a></li>
+    <li><a href="#" data-page="solar" onclick="return goPage('solar')">3D Solar System</a></li>
+    <li style="position:relative;">
+      <button id="rotoBtn" onclick="toggleDD()">Rotoscoping ▾</button>
+      <ul class="nav-dropdown" id="rotoDD"></ul>
+    </li>
+  </ul>
+</nav>
+
+<!-- ══════════ HOME ══════════ -->
+<div class="page active" id="page-home">
+  <div class="home-hero">
+    <div class="home-glow home-glow-1"></div>
+    <div class="home-glow home-glow-2"></div>
+    <p class="home-eyebrow fi fi1">MMA Portfolio — Animation Studies</p>
+    <h1 class="home-title">
+      <span class="line1 fi fi2">Frame by</span>
+      <span class="line2 fi fi3">Frame.</span>
+    </h1>
+    <p class="home-sub fi fi4">A 12-week rotoscoping journey — tracing motion, light, and form through hand-crafted animation and 3D solar system exploration in Blender.</p>
+    <div class="home-btns fi fi5">
+      <button class="btn-primary" onclick="goPage('solar')">View 3D Planets</button>
+      <button class="btn-secondary" onclick="goPage('week',1)">See Week Progress</button>
+    </div>
+  </div>
+  <div class="home-stats">
+    <div class="stat-item fi fi2"><div class="stat-num">12</div><div class="stat-label">Weeks of Work</div></div>
+    <div class="stat-item fi fi3"><div class="stat-num">60s</div><div class="stat-label">Total Animation</div></div>
+    <div class="stat-item fi fi4"><div class="stat-num">8</div><div class="stat-label">Planets Rendered</div></div>
+    <div class="stat-item fi fi5"><div class="stat-num">30</div><div class="stat-label">Frames / Second</div></div>
+  </div>
+  <footer>
+    <div class="footer-brand">MMA PORTFOLIO</div>
+    <div class="footer-info">MMA COURSE — ACADEMIC PURPOSES<br>© 2024 ALL RIGHTS RESERVED</div>
+  </footer>
+</div>
+
+<!-- ══════════ ABOUT ══════════ -->
+<div class="page" id="page-about">
+  <div class="section-header">
+    <div class="bg-text">MMA</div>
+    <p class="page-eyebrow fi fi1">001 — About</p>
+    <h1 class="page-title fi fi2">Multimedia <span class="acc">Authoring</span></h1>
+    <p class="page-lead fi fi3">Where traditional animation technique meets cutting-edge 3D technology — exploring rotoscoping as the bridge between live-action reference and animated expression.</p>
+  </div>
+  <div class="about-blocks">
+    <div class="about-block fi fi1">
+      <span class="about-icon">🎓</span>
+      <h2>The MMA Course</h2>
+      <p>The <strong>Multimedia Authoring (MMA)</strong> program bridges creative disciplines — blending motion design, 3D modeling, compositing, and traditional animation into a unified practice.</p>
+      <p>Students engage with both historical techniques and modern pipelines, using industry tools like <strong>Blender, After Effects,</strong> and <strong>CapCut</strong> to bring concepts to life.</p>
+    </div>
+    <div class="about-block fi fi2">
+      <span class="about-icon">✏️</span>
+      <h2>What is Rotoscoping?</h2>
+      <p>Rotoscoping is the frame-by-frame tracing of live-action footage to produce realistic, fluid animation. First patented by <strong>Max Fleischer in 1917</strong>, it remains one of the most nuanced crafts in animation.</p>
+      <p>By studying real movement through rotoscoping, animators develop a <strong>deep understanding of weight, timing, and motion</strong> that elevates all their work.</p>
+    </div>
+    <div class="about-block fi fi3">
+      <span class="about-icon">🪐</span>
+      <h2>The 3D Connection</h2>
+      <p>3D rendering in <strong>Blender</strong> runs alongside rotoscoping in this course. The solar system project challenges students to master lighting, texturing, and shading — skills that directly inform rotoscoped compositing.</p>
+      <p>Rendered planets serve as <strong>dynamic backgrounds and lighting references</strong> for the rotoscoped sequences.</p>
+    </div>
+    <div class="about-block fi fi4">
+      <span class="about-icon">📽️</span>
+      <h2>The 60-Second Film</h2>
+      <p>Over 12 weeks, each student builds a <strong>60-second rotoscoped animation</strong> — 5 seconds of new animation produced each week at <strong>30 frames per second</strong>. The cumulative project is the capstone of the semester.</p>
+      <p>Weekly progress is documented here, showing the evolution from first frame to final composite — a living record of <strong>craft in progress.</strong></p>
+    </div>
+  </div>
+  <div class="about-course fi fi2">
+    <div><div class="cd-label">Course</div><div class="cd-val">Multimedia Authoring</div></div>
+    <div><div class="cd-label">Duration</div><div class="cd-val">12 Weeks / 1 Semester</div></div>
+    <div><div class="cd-label">Final Output</div><div class="cd-val">60-Second Animation</div></div>
+    <div><div class="cd-label">Tools</div><div class="cd-val">Blender · After Effects · CapCut</div></div>
+    <div><div class="cd-label">Frame Rate</div><div class="cd-val">30 Frames Per Second</div></div>
+    <div><div class="cd-label">Per Week</div><div class="cd-val">5 Seconds of Animation</div></div>
+  </div>
+  <div class="about-tl fi fi2">
+    <h2>Semester Arc</h2>
+    <div class="tl-wrap">
+      <div class="tl-row"><div class="tl-wk">WK 01–03</div><div class="tl-txt"><strong>Foundations.</strong> Introduction to rotoscoping, workspace setup, frame extraction, and basic line tracing over still and moving reference.</div></div>
+      <div class="tl-row"><div class="tl-wk">WK 04–06</div><div class="tl-txt"><strong>Form &amp; Light.</strong> Line quality studies, colour passes, shadow mapping, and introduction to 3D solar system modeling in Blender.</div></div>
+      <div class="tl-row"><div class="tl-wk">WK 07–09</div><div class="tl-txt"><strong>Hybrid Work.</strong> Compositing rotoscoped figures over 3D renders. Motion blur, smear frames, and atmospheric FX layers.</div></div>
+      <div class="tl-row"><div class="tl-wk">WK 10–12</div><div class="tl-txt"><strong>Final Composite.</strong> Sound sync, multi-layer compositing, export, and final review. The complete 60-second film is assembled and submitted.</div></div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-brand">ROTOSCOPE</div>
+    <div class="footer-info">MMA COURSE — GITHUB PAGES<br>© 2024 ALL RIGHTS RESERVED</div>
+  </footer>
+</div>
+
+<!-- ══════════ SOLAR ══════════ -->
+<div class="page" id="page-solar">
+
+  <!-- Hero with background video -->
+  <div class="solar-hero">
+    <video class="solar-hero-video" src="planets/solarSystem.mp4" autoplay muted loop playsinline></video>
+    <div class="solar-hero-overlay"></div>
+    <div class="solar-hero-content">
+      <p class="page-eyebrow fi fi1">002 — 3D Work</p>
+      <h1 class="page-title fi fi2">The Solar <span class="acc">System</span></h1>
+      <p class="page-lead fi fi3">Eight planets rendered in Blender. Hover any planet to explore.</p>
+    </div>
+  </div>
+
+  <!-- Planets with constellation background -->
+  <div class="solar-bg">
+    <!-- Taurus constellation SVG -->
+    <svg class="constellation-bg" viewBox="0 0 1440 560" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <!-- Stars scattered across background -->
+      <g fill="rgba(255,255,255,0.25)">
+        <circle cx="42" cy="38" r="1"/><circle cx="130" cy="74" r="1.2"/><circle cx="210" cy="22" r="0.8"/>
+        <circle cx="320" cy="55" r="1"/><circle cx="405" cy="18" r="1.3"/><circle cx="490" cy="82" r="0.9"/>
+        <circle cx="575" cy="30" r="1.1"/><circle cx="660" cy="65" r="0.8"/><circle cx="740" cy="12" r="1.2"/>
+        <circle cx="825" cy="48" r="1"/><circle cx="910" cy="85" r="1.3"/><circle cx="995" cy="25" r="0.8"/>
+        <circle cx="1080" cy="60" r="1.1"/><circle cx="1165" cy="15" r="0.9"/><circle cx="1250" cy="72" r="1.2"/>
+        <circle cx="1335" cy="38" r="1"/><circle cx="1400" cy="52" r="0.8"/>
+        <circle cx="88" cy="150" r="0.9"/><circle cx="175" cy="188" r="1.1"/><circle cx="260" cy="140" r="0.8"/>
+        <circle cx="345" cy="175" r="1.2"/><circle cx="430" cy="210" r="0.9"/><circle cx="515" cy="155" r="1"/>
+        <circle cx="600" cy="192" r="1.3"/><circle cx="685" cy="135" r="0.8"/><circle cx="770" cy="170" r="1.1"/>
+        <circle cx="855" cy="215" r="0.9"/><circle cx="940" cy="145" r="1.2"/><circle cx="1025" cy="180" r="1"/>
+        <circle cx="1110" cy="128" r="0.8"/><circle cx="1195" cy="165" r="1.1"/><circle cx="1280" cy="200" r="0.9"/>
+        <circle cx="1365" cy="140" r="1.2"/>
+        <circle cx="55" cy="290" r="1.1"/><circle cx="140" cy="325" r="0.9"/><circle cx="225" cy="270" r="1"/>
+        <circle cx="310" cy="308" r="1.3"/><circle cx="395" cy="345" r="0.8"/><circle cx="480" cy="285" r="1.1"/>
+        <circle cx="565" cy="320" r="0.9"/><circle cx="650" cy="268" r="1.2"/><circle cx="735" cy="305" r="1"/>
+        <circle cx="820" cy="348" r="0.8"/><circle cx="905" cy="278" r="1.1"/><circle cx="990" cy="315" r="0.9"/>
+        <circle cx="1075" cy="260" r="1.2"/><circle cx="1160" cy="298" r="1"/><circle cx="1245" cy="335" r="0.8"/>
+        <circle cx="1330" cy="272" r="1.1"/>
+        <circle cx="70" cy="430" r="0.9"/><circle cx="155" cy="468" r="1.2"/><circle cx="240" cy="410" r="1"/>
+        <circle cx="325" cy="445" r="0.8"/><circle cx="410" cy="482" r="1.1"/><circle cx="495" cy="420" r="0.9"/>
+        <circle cx="580" cy="458" r="1.3"/><circle cx="665" cy="402" r="1"/><circle cx="750" cy="438" r="0.8"/>
+        <circle cx="835" cy="475" r="1.1"/><circle cx="920" cy="415" r="0.9"/><circle cx="1005" cy="452" r="1.2"/>
+        <circle cx="1090" cy="395" r="1"/><circle cx="1175" cy="430" r="0.8"/><circle cx="1260" cy="468" r="1.1"/>
+        <circle cx="1345" cy="408" r="0.9"/>
+        <circle cx="100" cy="520" r="1"/><circle cx="300" cy="540" r="0.8"/><circle cx="500" cy="510" r="1.1"/>
+        <circle cx="700" cy="535" r="0.9"/><circle cx="900" cy="505" r="1.2"/><circle cx="1100" cy="528" r="1"/>
+        <circle cx="1300" cy="512" r="0.8"/>
+      </g>
+
+      <!-- Taurus constellation lines (connecting dots to form the V-shape bull head) -->
+      <!-- Main Taurus V shape - the Hyades cluster -->
+      <g stroke="rgba(0,200,255,0.18)" stroke-width="0.8" fill="none">
+        <!-- The V of Taurus (Hyades) -->
+        <line x1="680" y1="220" x2="720" y2="260"/>
+        <line x1="720" y1="260" x2="780" y2="300"/>
+        <line x1="780" y1="300" x2="840" y2="270"/>
+        <line x1="840" y1="270" x2="900" y2="230"/>
+        <!-- Second fork of V -->
+        <line x1="780" y1="300" x2="800" y2="360"/>
+        <line x1="800" y1="360" x2="840" y2="400"/>
+        <!-- Horns -->
+        <line x1="680" y1="220" x2="620" y2="160"/>
+        <line x1="620" y1="160" x2="560" y2="120"/>
+        <line x1="900" y1="230" x2="960" y2="170"/>
+        <line x1="960" y1="170" x2="1020" y2="130"/>
+        <!-- Aldebaran connection to body -->
+        <line x1="840" y1="270" x2="870" y2="320"/>
+        <line x1="870" y1="320" x2="920" y2="350"/>
+        <!-- Pleiades cluster (shoulder) -->
+        <line x1="560" y1="120" x2="510" y2="100"/>
+        <line x1="510" y1="100" x2="480" y2="80"/>
+        <line x1="480" y1="80" x2="450" y2="105"/>
+        <line x1="450" y1="105" x2="430" y2="130"/>
+        <line x1="430" y1="130" x2="460" y2="145"/>
+        <line x1="460" y1="145" x2="510" y2="100"/>
+      </g>
+
+      <!-- Taurus star nodes (brighter where real stars are) -->
+      <g>
+        <!-- Aldebaran - brightest, red/orange tint -->
+        <circle cx="840" cy="270" r="3.5" fill="rgba(255,160,80,0.7)"/>
+        <circle cx="840" cy="270" r="6" fill="rgba(255,160,80,0.12)"/>
+        <!-- Other Hyades stars -->
+        <circle cx="720" cy="260" r="2.2" fill="rgba(200,220,255,0.65)"/>
+        <circle cx="780" cy="300" r="2" fill="rgba(200,220,255,0.6)"/>
+        <circle cx="900" cy="230" r="2.5" fill="rgba(200,220,255,0.6)"/>
+        <circle cx="680" cy="220" r="1.8" fill="rgba(180,210,255,0.55)"/>
+        <circle cx="800" cy="360" r="1.8" fill="rgba(180,210,255,0.5)"/>
+        <circle cx="840" cy="400" r="1.6" fill="rgba(180,210,255,0.45)"/>
+        <!-- Horn tips -->
+        <circle cx="560" cy="120" r="2" fill="rgba(180,210,255,0.6)"/>
+        <circle cx="1020" cy="130" r="2.2" fill="rgba(180,210,255,0.6)"/>
+        <circle cx="960" cy="170" r="1.8" fill="rgba(180,210,255,0.5)"/>
+        <circle cx="620" cy="160" r="1.6" fill="rgba(180,210,255,0.5)"/>
+        <!-- Pleiades -->
+        <circle cx="510" cy="100" r="1.8" fill="rgba(160,200,255,0.7)"/>
+        <circle cx="480" cy="80" r="1.5" fill="rgba(160,200,255,0.65)"/>
+        <circle cx="450" cy="105" r="1.6" fill="rgba(160,200,255,0.65)"/>
+        <circle cx="430" cy="130" r="1.4" fill="rgba(160,200,255,0.6)"/>
+        <circle cx="460" cy="145" r="1.3" fill="rgba(160,200,255,0.55)"/>
+        <!-- Aldebaran glow pulse (animated) -->
+      </g>
+
+      <!-- Label -->
+      <text x="840" y="245" font-family="'Share Tech Mono', monospace" font-size="8" fill="rgba(0,200,255,0.35)" letter-spacing="2" text-anchor="middle">TAURUS</text>
+    </svg>
+
+    <div class="planets-grid" id="planetsGrid"></div>
+  </div>
+
+  <div class="solar-note fi fi2">
+    <strong>How to add your Blender renders:</strong> Export each planet as MP4 video from Blender. Place files in a <code>planets/</code> folder matching names like <code>mercury.mp4</code>, <code>earth.mp4</code>, etc. The solar system overview video should be named <code>solarSystem.mp4</code> for the header background.
+  </div>
+  <footer>
+    <div class="footer-brand">ROTOSCOPE</div>
+    <div class="footer-info">MMA COURSE — GITHUB PAGES<br>© 2024 ALL RIGHTS RESERVED</div>
+  </footer>
+</div>
+
+<!-- ══════════ WEEK ══════════ -->
+<div class="page" id="page-week">
+  <div class="week-top">
+    <div>
+      <div class="week-lbl" id="wkLabel">Week 01</div>
+      <h1 class="week-h1" id="wkTitle"><span class="acc">0–5</span> Seconds</h1>
+    </div>
+    <div class="week-nav-row">
+      <button class="wnav-btn" id="prevBtn" onclick="shiftWeek(-1)">◀ Prev</button>
+      <button class="wnav-btn" id="nextBtn" onclick="shiftWeek(1)">Next ▶</button>
+    </div>
+  </div>
+  <div class="prog-strip" id="progStrip"></div>
+  <div class="week-body">
+    <div>
+      <div class="vid-wrap">
+        <div class="vid-tag">VIDEO</div>
+        <div class="vid-ratio" id="vidArea">
+          <div class="vid-ph" id="vidPh">
+            <div class="play-ring">▶</div>
+            <p>PASTE A YOUTUBE LINK BELOW<br>TO EMBED YOUR PROGRESS VIDEO</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="week-cards">
+      <div class="wcard">
+        <h2>TOOLS USED</h2>
+        <div class="week-tags" id="wkTags">
+          <span class="wtag">CapCut</span>
+          <span class="wtag">After Effects</span>
+          <span class="wtag">Blender</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-all">
+    <h2>Project Timeline</h2>
+    <div class="week-grid" id="weekGrid"></div>
+  </div>
+
+  <footer>
+    <div class="footer-brand">ROTOSCOPE</div>
+    <div class="footer-info">MMA COURSE — GITHUB PAGES<br>© 2024 ALL RIGHTS RESERVED</div>
+  </footer>
+</div>
+
+<script>
+// --- DATA CONFIGURATION ---
+// timeframe: shows which seconds this week covers (5 sec each)
+const weeksData = [
+  { timeframe: "0–5",   ytLink: "https://youtu.be/A_rzEFX2gDA",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "5–10",  ytLink: "https://youtu.be/XsTdcKl8u2s",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "10–15", ytLink: "https://youtu.be/mhLQK2k38p8",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "15–20", ytLink: "https://youtu.be/bFPdVaelr7Y",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "20–25", ytLink: "https://youtu.be/mi6SCYp-FjE",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "25–30", ytLink: "https://youtu.be/BSGq16d8orI",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "30–35", ytLink: "https://youtu.be/EzKULA4UYN0",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "35–40", ytLink: "https://youtu.be/uxzNsor9wt0",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "40–45", ytLink: "https://youtu.be/mP3KIk8bYDM",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "45–50", ytLink: "yourytlink",                    tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "50–55", ytLink: "yourytlink",                    tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "55–60", ytLink: "yourytlink",                    tags: ["CapCut", "After Effects", "Blender"] }
+];
+
+const planets = [
+  { name: "Mercury", type: "Terrestrial",  class: "mercury", orbit: 0.24,   desc: "Smallest planet, closest to the Sun. Surface temperature swings from −180 °C to 430 °C." },
+  { name: "Venus",   type: "Terrestrial",  class: "venus",   orbit: 0.62,   desc: "Dense CO₂ atmosphere traps heat — hotter than Mercury at 465 °C average." },
+  { name: "Earth",   type: "Terrestrial",  class: "earth",   orbit: 1.0,    desc: "Our home. The blue marble — liquid water, life, and a protective magnetic field." },
+  { name: "Mars",    type: "Terrestrial",  class: "mars",    orbit: 1.88,   desc: "The red planet — iron oxide dust, thin atmosphere, and the tallest volcano in the solar system." },
+  { name: "Jupiter", type: "Gas Giant",    class: "jupiter", orbit: 11.86,  desc: "Largest planet. Its Great Red Spot is a storm older than 350 years." },
+  { name: "Saturn",  type: "Gas Giant",    class: "saturn",  orbit: 29.46,  desc: "Ring system stretches 280,000 km wide yet only 20 m thick." },
+  { name: "Uranus",  type: "Ice Giant",    class: "uranus",  orbit: 84.01,  desc: "Rotates on its side — axial tilt of 98°. Wind speeds reach 900 km/h." },
+  { name: "Neptune", type: "Ice Giant",    class: "neptune", orbit: 164.79, desc: "Farthest planet. The Great Dark Spot rivals Jupiter's storm in relative scale." }
+];
+
+let currentWeek = 1;
+
+window.onload = () => {
+  initSolar();
+  initWeekGrid();
+  initDropdown();
+  goPage('home');
+};
+
+function initSolar() {
+  const grid = document.getElementById('planetsGrid');
+  grid.innerHTML = planets.map((p, i) => `
+    <div class="planet-card">
+      <div class="planet-render">
+        <video src="planets/${p.class}.mp4" autoplay muted loop playsinline
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"></video>
+        <div class="planet-orb-wrap" style="display:none;">
+          ${p.class === 'saturn'
+            ? `<div class="saturn-wrap"><div class="orb orb-saturn"></div></div>`
+            : `<div class="orb orb-${p.class}"></div>`}
+        </div>
+      </div>
+      <div class="planet-card-overlay"></div>
+      <div class="blender-tag">RENDER</div>
+      <!-- Collapsed label -->
+      <div class="planet-side-label">${p.name}</div>
+      <!-- Expanded info -->
+      <div class="planet-info-expanded">
+        <div class="planet-name-exp">${p.name}</div>
+        <div class="planet-type-exp">${p.type}</div>
+        <p class="planet-desc-exp">${p.desc}</p>
+        <div class="planet-fact-exp">ORBIT: ${p.orbit} Earth Yrs</div>
+        <div class="age-calc-exp">
+          <input type="number" min="0" placeholder="Earth age"
+                 oninput="calcAge(this, ${p.orbit}, 'res-${i}')"
+                 onclick="event.stopPropagation()">
+          <span class="age-label">→</span>
+          <span class="age-result-exp" id="res-${i}">— ${p.name} yrs</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function calcAge(input, orbit, resultId) {
+  const earthYears = parseFloat(input.value) || 0;
+  const planetAge = (earthYears / orbit).toFixed(2);
+  document.getElementById(resultId).innerText = `${planetAge} yrs`;
+}
+
+function initWeekGrid() {
+  const grid = document.getElementById('weekGrid');
+  const dd = document.getElementById('rotoDD');
+  let gridHtml = '', ddHtml = '';
+  for (let i = 1; i <= 12; i++) {
+    const tf = weeksData[i-1].timeframe;
+    gridHtml += `<div class="wg-item" onclick="goPage('week', ${i})">
+      <div class="wg-box" id="wg-${i}">${i}</div>
+      <div class="wg-lbl">${tf}s</div>
+    </div>`;
+    ddHtml += `<a href="#" onclick="return goPage('week', ${i})">
+      <span class="wk-num">W${i < 10 ? '0'+i : i}</span> ${tf} sec
+    </a>`;
+  }
+  grid.innerHTML = gridHtml;
+  dd.innerHTML = ddHtml;
+}
+
+function goPage(pageId, wk = null) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById(`page-${pageId}`).classList.add('active');
+  const navLink = document.querySelector(`[data-page="${pageId}"]`);
+  if (navLink) navLink.classList.add('active');
+  if (wk) { currentWeek = wk; updateWeekContent(); }
+  document.getElementById('rotoDD').classList.remove('open');
+  window.scrollTo(0, 0);
+  return false;
+}
+
+function toggleDD() {
+  document.getElementById('rotoDD').classList.toggle('open');
+}
+
+function shiftWeek(dir) {
+  currentWeek = Math.max(1, Math.min(12, currentWeek + dir));
+  updateWeekContent();
+}
+
+function updateWeekContent() {
+  const data = weeksData[currentWeek - 1];
+  const wkNum = currentWeek < 10 ? '0' + currentWeek : currentWeek;
+
+  // Label & title
+  document.getElementById('wkLabel').innerText = `Week ${wkNum}`;
+  document.getElementById('wkTitle').innerHTML =
+    `<span class="acc">${data.timeframe}</span> Seconds`;
+
+  // Tags
+  document.getElementById('wkTags').innerHTML =
+    data.tags.map(t => `<span class="wtag">${t}</span>`).join('');
+
+  // Video
+  const vidArea = document.getElementById('vidArea');
+  const url = data.ytLink;
+  const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  if (match && match[2].length === 11) {
+    vidArea.innerHTML = `<iframe src="https://www.youtube.com/embed/${match[2]}" allowfullscreen></iframe>`;
+  } else {
+    vidArea.innerHTML = `
+      <div class="vid-ph">
+        <div class="play-ring">▶</div>
+        <p>WEEK ${currentWeek} VIDEO PENDING<br>EDIT 'ytLink' IN THE SCRIPT TO EMBED</p>
+      </div>`;
+  }
+
+  // Progress UI
+  document.querySelectorAll('.wg-box').forEach((box, idx) => {
+    box.className = 'wg-box';
+    if (idx + 1 < currentWeek) box.classList.add('done');
+    if (idx + 1 === currentWeek) box.classList.add('cur');
+  });
+
+  document.getElementById('prevBtn').disabled = currentWeek === 1;
+  document.getElementById('nextBtn').disabled = currentWeek === 12;
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#rotoBtn') && !e.target.closest('#rotoDD')) {
+    document.getElementById('rotoDD').classList.remove('open');
+  }
+});
+</script>
+</body>
+</html>
