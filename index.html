@@ -193,28 +193,56 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 #page-solar{background:var(--black);}
 
 /* Solar hero with video background */
-.solar-hero{
-  position:relative;
-  height:520px;
-  overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
+/* Base styles for the hero container */
+.solar-hero {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  transition: height 0.8s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth transition */
 }
-.solar-hero-video{
-  position:absolute;inset:0;
-  width:100%;height:100%;
-  object-fit:cover;
-  z-index:0;
-  filter:brightness(0.55) saturate(1.2);
+
+/* STATE 1: Full-screen Intro */
+.solar-hero.is-intro {
+  height: 100vh;
 }
-.solar-hero-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to bottom,rgba(5,6,8,0.35) 0%,rgba(5,6,8,0.0) 40%,rgba(5,6,8,0.75) 80%,var(--black) 100%);
-  z-index:1;
+
+/* STATE 2: Header Background (Adjust 300px to your preferred header height) */
+.solar-hero:not(.is-intro) {
+  height: 300px; 
 }
-.solar-hero-content{
-  position:relative;z-index:2;
-  text-align:center;
-  padding:0 32px;
+
+/* Video formatting to ensure it covers the area in both states */
+.solar-hero-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.solar-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* Darkens video for text readability */
+  z-index: 2;
+}
+
+.solar-hero-content {
+  position: relative;
+  z-index: 3;
+  color: #fff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 .solar-hero-content .page-eyebrow{justify-content:center;}
 .solar-hero-content .page-eyebrow::before{display:none;}
@@ -595,16 +623,15 @@ footer{background:var(--navy-900);border-top:1px solid var(--dim);padding:30px 8
 <div class="page" id="page-solar">
 
   <!-- Hero with background video -->
-  <div class="solar-hero">
-    <video class="solar-hero-video" src="planets/solarSystem.mp4" autoplay muted loop playsinline></video>
+  <div class="solar-hero is-intro" id="solarHero">
+    <video class="solar-hero-video" id="solarVideo" src="planets/solarSystem.mp4" autoplay muted loop playsinline></video>
     <div class="solar-hero-overlay"></div>
     <div class="solar-hero-content">
       <p class="page-eyebrow fi fi1">002 — 3D Work</p>
       <h1 class="page-title fi fi2">The Solar <span class="acc">System</span></h1>
-      <p class="page-lead fi fi3">Eight planets rendered in Blender. Hover any planet to explore.</p>
+      <p class="page-lead fi fi3">Eight planets rendered in Blender. Click anywhere or press Space to explore.</p>
     </div>
   </div>
-
   <!-- Planets with constellation background -->
   <div class="solar-bg">
     <!-- Taurus constellation SVG -->
@@ -922,6 +949,36 @@ document.addEventListener('click', (e) => {
     document.getElementById('rotoDD').classList.remove('open');
   }
 });
+document.addEventListener("DOMContentLoaded", () => {
+  const hero = document.getElementById("solarHero");
+  const video = document.getElementById("solarVideo");
+
+  // Force play on load just in case browser blocked autoplay
+  video.play().catch(error => {
+    console.log("Autoplay blocked by browser, waiting for user interaction.");
+  });
+
+  // Function to handle the transition
+  function transitionToHeader() {
+    if (hero.classList.contains("is-intro")) {
+      hero.classList.remove("is-intro");
+      
+      // Safety check: ensure video keeps playing after interaction
+      video.play(); 
+    }
+  }
+
+  // 1. Trigger on Click anywhere on the solar page
+  hero.addEventListener("click", transitionToHeader);
+
+  // 2. Trigger on Spacebar press
+  window.addEventListener("keydown", (event) => {
+    if (event.code === "Space" || event.keyCode === 32) {
+      event.preventDefault(); // Prevents page from scrolling down when pressing space
+      transitionToHeader();
+    }
+  });
+});  
 </script>
 </body>
 </html>
