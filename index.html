@@ -14,14 +14,14 @@
   --navy-600: #112248;
   --navy-500: #1a3460;
   --navy-400: #1e3f78;
-  --blue:     #1e6fff;
+  --blue:      #1e6fff;
   --blue-lt:  #4d8fff;
-  --cyan:     #00c8ff;
+  --cyan:      #00c8ff;
   --silver:   #8aa0c0;
   --steel:    #4a6080;
   --white:    #e8edf5;
   --dim:      #1e2d45;
-  --glow:     rgba(0,200,255,0.12);
+  --glow:      rgba(0,200,255,0.12);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -192,34 +192,60 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 /* ═══════════════════ SOLAR — VIDEO HEADER ═══════════════════ */
 #page-solar{background:var(--black);}
 
-/* Solar hero with video background */
-.solar-hero{
-  position:relative;
-  height:520px;
-  overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
+/* Solar hero structure updated to support transitions */
+.solar-hero {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: height 0.8s cubic-bezier(0.25, 1, 0.3, 1);
+  cursor: pointer;
 }
-.solar-hero-video{
-  position:absolute;inset:0;
-  width:100%;height:100%;
-  object-fit:cover;
-  z-index:0;
-  filter:brightness(0.55) saturate(1.2);
+
+/* State 1: Default layout as Full-Screen Landing Intro */
+.solar-hero.is-intro {
+  height: calc(100vh - 64px); /* Fills screen cleanly without breaking navbar bounds */
 }
-.solar-hero-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to bottom,rgba(5,6,8,0.35) 0%,rgba(5,6,8,0.0) 40%,rgba(5,6,8,0.75) 80%,var(--black) 100%);
-  z-index:1;
+
+/* State 2: Trimmed down to header background once activated */
+.solar-hero:not(.is-intro) {
+  height: 520px;
+  cursor: default; /* Reverts cursor styling since interaction fulfilled */
 }
-.solar-hero-content{
-  position:relative;z-index:2;
-  text-align:center;
-  padding:0 32px;
+
+.solar-hero-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  filter: brightness(0.55) saturate(1.2);
 }
-.solar-hero-content .page-eyebrow{justify-content:center;}
-.solar-hero-content .page-eyebrow::before{display:none;}
-.solar-hero-content .page-title{font-size:clamp(3rem,8vw,6.5rem);margin-bottom:16px;}
-.solar-hero-content .page-lead{margin:0 auto;text-align:center;}
+
+.solar-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(5,6,8,0.35) 0%, rgba(5,6,8,0.0) 40%, rgba(5,6,8,0.75) 80%, var(--black) 100%);
+  z-index: 1;
+}
+
+.solar-hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 32px;
+  transition: transform 0.6s ease;
+}
+
+.solar-hero-content .page-eyebrow { justify-content: center; }
+.solar-hero-content .page-eyebrow::before { display: none; }
+.solar-hero-content .page-title { font-size: clamp(3rem, 8vw, 6.5rem); margin-bottom: 16px; }
+.solar-hero-content .page-lead { margin: 0 auto; text-align: center; }
 
 /* ═══════════════════ SOLAR — PLANETS GRID (HOVER EXPAND) ═══════════════════ */
 
@@ -406,7 +432,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 .solar-note strong{color:var(--white);}
 .solar-note code{font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--cyan);background:rgba(0,200,255,0.07);padding:1px 5px;border-radius:2px;}
 
-/* ═══════════════════ WEEK ═══════════════════ */
+/* ── WEEK ── */
 #page-week{background:var(--black);}
 .week-top{
   padding:60px 80px 40px;border-bottom:1px solid var(--dim);
@@ -451,12 +477,12 @@ button{cursor:pointer;border:none;background:none;font-family:inherit;color:inhe
 .wg-box.cur{background:rgba(30,111,255,0.18);border-color:var(--blue);color:var(--cyan);box-shadow:0 0 10px rgba(30,111,255,0.22);}
 .wg-lbl{font-size:0.46rem;letter-spacing:0.1em;color:var(--steel);text-align:center;line-height:1.3;}
 
-/* ═══════════════════ FOOTER ═══════════════════ */
+/* ── FOOTER ── */
 footer{background:var(--navy-900);border-top:1px solid var(--dim);padding:30px 80px;display:flex;justify-content:space-between;align-items:center;}
 .footer-brand{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.95rem;letter-spacing:0.28em;color:var(--cyan);}
 .footer-info{font-family:'Share Tech Mono',monospace;font-size:0.56rem;letter-spacing:0.14em;color:var(--steel);text-align:right;}
 
-/* ═══════════════════ RESPONSIVE ═══════════════════ */
+/* ── RESPONSIVE ── */
 @media(max-width:1100px){
   .home-stats{grid-template-columns:repeat(2,1fr);}
   .planets-grid{flex-wrap:wrap;}
@@ -594,16 +620,16 @@ footer{background:var(--navy-900);border-top:1px solid var(--dim);padding:30px 8
 <!-- ══════════ SOLAR ══════════ -->
 <div class="page" id="page-solar">
 
-  <!-- Hero with background video -->
-  <div class="solar-hero">
-    <video class="solar-hero-video" src="planets/solarSystem.mp4" autoplay muted loop playsinline></video>
+  <div class="solar-hero is-intro" id="solarHero">
+    <video class="solar-hero-video" id="solarVideo" src="planets/solarSystem.mp4" autoplay muted loop playsinline></video>
     <div class="solar-hero-overlay"></div>
     <div class="solar-hero-content">
       <p class="page-eyebrow fi fi1">002 — 3D Work</p>
       <h1 class="page-title fi fi2">The Solar <span class="acc">System</span></h1>
-      <p class="page-lead fi fi3">Eight planets rendered in Blender. Hover any planet to explore.</p>
+      <p class="page-lead fi fi3">Eight planets rendered in Blender. Click anywhere or press Space to explore.</p>
     </div>
   </div>
+</div>
 
   <!-- Planets with constellation background -->
   <div class="solar-bg">
@@ -915,7 +941,36 @@ function updateWeekContent() {
   document.getElementById('prevBtn').disabled = currentWeek === 1;
   document.getElementById('nextBtn').disabled = currentWeek === 12;
 }
+document.addEventListener("DOMContentLoaded", () => {
+  const hero = document.getElementById("solarHero");
+  const video = document.getElementById("solarVideo");
 
+  // Force play on load just in case browser blocked autoplay
+  video.play().catch(error => {
+    console.log("Autoplay blocked by browser, waiting for user interaction.");
+  });
+
+  // Function to handle the transition
+  function transitionToHeader() {
+    if (hero.classList.contains("is-intro")) {
+      hero.classList.remove("is-intro");
+      
+      // Safety check: ensure video keeps playing after interaction
+      video.play(); 
+    }
+  }
+
+  // 1. Trigger on Click anywhere on the solar page
+  hero.addEventListener("click", transitionToHeader);
+
+  // 2. Trigger on Spacebar press
+  window.addEventListener("keydown", (event) => {
+    if (event.code === "Space" || event.keyCode === 32) {
+      event.preventDefault(); // Prevents page from scrolling down when pressing space
+      transitionToHeader();
+    }
+  });
+});
 // Close dropdown when clicking outside
 document.addEventListener('click', (e) => {
   if (!e.target.closest('#rotoBtn') && !e.target.closest('#rotoDD')) {
