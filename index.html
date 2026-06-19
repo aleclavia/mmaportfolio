@@ -788,20 +788,19 @@ footer{background:var(--navy-900);border-top:1px solid var(--dim);padding:30px 8
 
 <script>
 // --- DATA CONFIGURATION ---
-// timeframe: shows which seconds this week covers (5 sec each)
 const weeksData = [
-  { timeframe: "0–5",   ytLink: "https://youtu.be/A_rzEFX2gDA",  tags: ["CapCut", "After Effects", "Blender"] },
-  { timeframe: "5–10",  ytLink: "https://youtu.be/XsTdcKl8u2s",  tags: ["CapCut", "After Effects", "Blender"] },
-  { timeframe: "10–15", ytLink: "https://youtu.be/mhLQK2k38p8",  tags: ["CapCut", "After Effects", "Blender"] },
-  { timeframe: "15–20", ytLink: "https://youtu.be/bFPdVaelr7Y",  tags: ["CapCut", "After Effects", "Blender"] },
-  { timeframe: "20–25", ytLink: "https://youtu.be/mi6SCYp-FjE",  tags: ["CapCut", "After Effects", "Blender"] },
-  { timeframe: "25–30", ytLink: "https://youtu.be/BSGq16d8orI",  tags: ["CapCut", "After Effects", "Blender"] },
-  { timeframe: "30–35", ytLink: "https://youtu.be/EzKULA4UYN0",  tags: ["CapCut", "After Effects", "Blender"] },
-  { timeframe: "35–40", ytLink: "https://youtu.be/uxzNsor9wt0",  tags: ["CapCut", "After Effects", "Blender"] },
-  { timeframe: "40–45", ytLink: "https://youtu.be/mP3KIk8bYDM",  tags: ["CapCut", "After Effects", "Blender"] },
-  { timeframe: "45–50", ytLink: "https://youtu.be/FJOCzkvwPpY",  tags: ["CapCut", "After Effects", "Blender"] },
-  { timeframe: "50–55", ytLink: "https://youtu.be/hsS1-HMDxXk",  tags: ["CapCut", "After Effects", "Blender"] },
-  { timeframe: "55–60", ytLink: "https://youtu.be/laK0yEp8Kzk",  tags: ["CapCut", "After Effects", "Blender"] }
+  { timeframe: "0–5",    ytLink: "https://youtu.be/A_rzEFX2gDA",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "5–10",   ytLink: "https://youtu.be/XsTdcKl8u2s",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "10–15",  ytLink: "https://youtu.be/mhLQK2k38p8",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "15–20",  ytLink: "https://youtu.be/bFPdVaelr7Y",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "20–25",  ytLink: "https://youtu.be/mi6SCYp-FjE",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "25–30",  ytLink: "https://youtu.be/BSGq16d8orI",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "30–35",  ytLink: "https://youtu.be/EzKULA4UYN0",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "35–40",  ytLink: "https://youtu.be/uxzNsor9wt0",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "40–45",  ytLink: "https://youtu.be/mP3KIk8bYDM",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "45–50",  ytLink: "https://youtu.be/hsS1-HMDxXk",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "50–55",  ytLink: "https://youtu.be/hsS1-HMDxXk",  tags: ["CapCut", "After Effects", "Blender"] },
+  { timeframe: "55–60",  ytLink: "https://youtu.be/laK0yEp8Kzk",  tags: ["CapCut", "After Effects", "Blender"] }
 ];
 
 const planets = [
@@ -817,15 +816,18 @@ const planets = [
 
 let currentWeek = 1;
 
+// --- INITIALIZATION ---
 window.onload = () => {
   initSolar();
-  initWeekGrid();
-  initDropdown();
+  initWeekGrid();   // This builds both your grid AND your dropdown items dynamically
+  updateWeekContent(); 
   goPage('home');
+  initHeroIntroControls();
 };
 
 function initSolar() {
   const grid = document.getElementById('planetsGrid');
+  if (!grid) return;
   grid.innerHTML = planets.map((p, i) => `
     <div class="planet-card">
       <div class="planet-render">
@@ -839,9 +841,7 @@ function initSolar() {
       </div>
       <div class="planet-card-overlay"></div>
       <div class="blender-tag">RENDER</div>
-      <!-- Collapsed label -->
       <div class="planet-side-label">${p.name}</div>
-      <!-- Expanded info -->
       <div class="planet-info-expanded">
         <div class="planet-name-exp">${p.name}</div>
         <div class="planet-type-exp">${p.type}</div>
@@ -862,12 +862,15 @@ function initSolar() {
 function calcAge(input, orbit, resultId) {
   const earthYears = parseFloat(input.value) || 0;
   const planetAge = (earthYears / orbit).toFixed(2);
-  document.getElementById(resultId).innerText = `${planetAge} yrs`;
+  const resEl = document.getElementById(resultId);
+  if (resEl) resEl.innerText = `${planetAge} yrs`;
 }
 
 function initWeekGrid() {
   const grid = document.getElementById('weekGrid');
   const dd = document.getElementById('rotoDD');
+  if (!grid || !dd) return;
+  
   let gridHtml = '', ddHtml = '';
   for (let i = 1; i <= 12; i++) {
     const tf = weeksData[i-1].timeframe;
@@ -875,7 +878,7 @@ function initWeekGrid() {
       <div class="wg-box" id="wg-${i}">${i}</div>
       <div class="wg-lbl">${tf}s</div>
     </div>`;
-    ddHtml += `<a href="#" onclick="return goPage('week', ${i})">
+    ddHtml += `<a href="#" onclick="goPage('week', ${i}); return false;">
       <span class="wk-num">W${i < 10 ? '0'+i : i}</span> ${tf} sec
     </a>`;
   }
@@ -885,18 +888,29 @@ function initWeekGrid() {
 
 function goPage(pageId, wk = null) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-  document.getElementById(`page-${pageId}`).classList.add('active');
+  document.querySelectorAll('.nav-links a, .nav-links button').forEach(a => a.classList.remove('active'));
+  
+  const targetPage = document.getElementById(`page-${pageId}`);
+  if (targetPage) targetPage.classList.add('active');
+  
   const navLink = document.querySelector(`[data-page="${pageId}"]`);
   if (navLink) navLink.classList.add('active');
-  if (wk) { currentWeek = wk; updateWeekContent(); }
-  document.getElementById('rotoDD').classList.remove('open');
+  
+  if (wk !== null) { 
+    currentWeek = wk; 
+    updateWeekContent(); 
+  }
+  
+  const dropdown = document.getElementById('rotoDD');
+  if (dropdown) dropdown.classList.remove('open');
+  
   window.scrollTo(0, 0);
   return false;
 }
 
 function toggleDD() {
-  document.getElementById('rotoDD').classList.toggle('open');
+  const dropdown = document.getElementById('rotoDD');
+  if (dropdown) dropdown.classList.toggle('open');
 }
 
 function shiftWeek(dir) {
@@ -908,77 +922,82 @@ function updateWeekContent() {
   const data = weeksData[currentWeek - 1];
   const wkNum = currentWeek < 10 ? '0' + currentWeek : currentWeek;
 
-  // Label & title
-  document.getElementById('wkLabel').innerText = `Week ${wkNum}`;
-  document.getElementById('wkTitle').innerHTML =
-    `<span class="acc">${data.timeframe}</span> Seconds`;
-
-  // Tags
-  document.getElementById('wkTags').innerHTML =
-    data.tags.map(t => `<span class="wtag">${t}</span>`).join('');
-
-  // Video
+  const wkLabel = document.getElementById('wkLabel');
+  const wkTitle = document.getElementById('wkTitle');
+  const wkTags = document.getElementById('wkTags');
   const vidArea = document.getElementById('vidArea');
-  const url = data.ytLink;
-  const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-  const match = url.match(regExp);
-  if (match && match[2].length === 11) {
-    vidArea.innerHTML = `<iframe src="https://www.youtube.com/embed/${match[2]}" allowfullscreen></iframe>`;
-  } else {
-    vidArea.innerHTML = `
-      <div class="vid-ph">
-        <div class="play-ring">▶</div>
-        <p>WEEK ${currentWeek} VIDEO PENDING<br>EDIT 'ytLink' IN THE SCRIPT TO EMBED</p>
-      </div>`;
+
+  if (wkLabel) wkLabel.innerText = `Week ${wkNum}`;
+  if (wkTitle) wkTitle.innerHTML = `<span class="acc">${data.timeframe}</span> Seconds`;
+  if (wkTags) wkTags.innerHTML = data.tags.map(t => `<span class="wtag">${t}</span>`).join('');
+
+  if (vidArea) {
+    const url = data.ytLink;
+    const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2].length === 11) {
+      vidArea.innerHTML = `<iframe src="https://www.youtube.com/embed/${match[2]}" allowfullscreen></iframe>`;
+    } else {
+      vidArea.innerHTML = `
+        <div class="vid-ph">
+          <div class="play-ring">▶</div>
+          <p>WEEK ${currentWeek} VIDEO PENDING<br>EDIT 'ytLink' IN THE SCRIPT TO EMBED</p>
+        </div>`;
+    }
   }
 
-  // Progress UI
   document.querySelectorAll('.wg-box').forEach((box, idx) => {
     box.className = 'wg-box';
     if (idx + 1 < currentWeek) box.classList.add('done');
     if (idx + 1 === currentWeek) box.classList.add('cur');
   });
 
-  document.getElementById('prevBtn').disabled = currentWeek === 1;
-  document.getElementById('nextBtn').disabled = currentWeek === 12;
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  if (prevBtn) prevBtn.disabled = currentWeek === 1;
+  if (nextBtn) nextBtn.disabled = currentWeek === 12;
 }
 
-// Close dropdown when clicking outside
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('#rotoBtn') && !e.target.closest('#rotoDD')) {
-    document.getElementById('rotoDD').classList.remove('open');
-  }
-});
-document.addEventListener("DOMContentLoaded", () => {
+function initHeroIntroControls() {
   const hero = document.getElementById("solarHero");
   const video = document.getElementById("solarVideo");
+  
+  if (!hero || !video) return;
 
-  // Force play on load just in case browser blocked autoplay
-  video.play().catch(error => {
-    console.log("Autoplay blocked by browser, waiting for user interaction.");
+  // Catch autoplay blocks cleanly without throwing unhandled errors
+  video.play().catch(() => {
+    console.log("Autoplay paused. Awaiting interaction handler context.");
   });
 
-  // Function to handle the transition
   function transitionToHeader() {
     if (hero.classList.contains("is-intro")) {
       hero.classList.remove("is-intro");
-      
-      // Safety check: ensure video keeps playing after interaction
-      video.play(); 
+      // Only try to play if the source loaded correctly
+      if (video.readyState >= 2) {
+        video.play().catch(err => console.log("Video playback interrupted:", err)); 
+      }
     }
   }
 
-  // 1. Trigger on Click anywhere on the solar page
   hero.addEventListener("click", transitionToHeader);
 
-  // 2. Trigger on Spacebar press
   window.addEventListener("keydown", (event) => {
     if (event.code === "Space" || event.keyCode === 32) {
-      event.preventDefault(); // Prevents page from scrolling down when pressing space
-      transitionToHeader();
+      const solarPage = document.getElementById("page-solar");
+      if (solarPage && solarPage.classList.contains("active") && hero.classList.contains("is-intro")) {
+        event.preventDefault(); 
+        transitionToHeader();
+      }
     }
   });
-});  
+}
+
+document.addEventListener('click', (e) => {
+  const dropdown = document.getElementById('rotoDD');
+  if (dropdown && !e.target.closest('#rotoBtn') && !e.target.closest('#rotoDD')) {
+    dropdown.classList.remove('open');
+  }
+});
 </script>
 </body>
 </html>
