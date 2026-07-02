@@ -1040,19 +1040,29 @@ const weeksData = [
 ];
 
 const planets = [
-  { name: "Sun",     type: "Star",         class: "sun",     orbit: 0,       desc: "The star at the center of our solar system — 99.8% of the system's total mass." },
-  { name: "Mercury", type: "Terrestrial",  class: "mercury", orbit: 0.24,   desc: "Smallest planet, closest to the Sun. Surface temperature swings from −180 °C to 430 °C." },
-  { name: "Venus",   type: "Terrestrial",  class: "venus",   orbit: 0.62,   desc: "Dense CO₂ atmosphere traps heat — hotter than Mercury at 465 °C average." },
-  { name: "Earth",   type: "Terrestrial",  class: "earth",   orbit: 1.0,    desc: "Our home. The blue marble — liquid water, life, and a protective magnetic field." },
-  { name: "Moon",    type: "Natural Satellite", class: "moon", orbit: 0.0748, desc: "Earth's only natural satellite. Its gravity drives our tides and stabilizes our tilt." },
-  { name: "Mars",    type: "Terrestrial",  class: "mars",    orbit: 1.88,   desc: "The red planet — iron oxide dust, thin atmosphere, and the tallest volcano in the solar system." },
-  { name: "Jupiter", type: "Gas Giant",    class: "jupiter", orbit: 11.86,  desc: "Largest planet. Its Great Red Spot is a storm older than 350 years." },
-  { name: "Saturn",  type: "Gas Giant",    class: "saturn",  orbit: 29.46,  desc: "Ring system stretches 280,000 km wide yet only 20 m thick." },
-  { name: "Uranus",  type: "Ice Giant",    class: "uranus",  orbit: 84.01,  desc: "Rotates on its side — axial tilt of 98°. Wind speeds reach 900 km/h." },
-  { name: "Neptune", type: "Ice Giant",    class: "neptune", orbit: 164.79, desc: "Farthest planet. The Great Dark Spot rivals Jupiter's storm in relative scale." },
-  { name: "Pluto",   type: "Dwarf Planet", class: "pluto",   orbit: 248.09, desc: "Reclassified as a dwarf planet in 2006. Home to a heart-shaped glacier, Tombaugh Regio." }
+  { name: "Sun", type: "Star", class: "sun", orbit: 0,
+    desc: "The Sun is a G-type star at the center of the solar system. Axial tilt: 7.25°. Moons: 0. Rotates once every ~25 Earth days (~5 rotations per 5 Earth days)." },
+  { name: "Mercury", type: "Terrestrial", class: "mercury", orbit: 0.24,
+    desc: "Smallest and closest planet to the Sun with extreme temperatures. Axial tilt: 0.03°. Moons: 0. Rotation: 58.6 Earth days (~11.7× slower than 5 Earth days)." },
+  { name: "Venus", type: "Terrestrial", class: "venus", orbit: 0.62,
+    desc: "A dense, toxic world with runaway greenhouse effect and retrograde spin. Axial tilt: 177.4°. Moons: 0. Rotation: 243 Earth days (~48.6× slower than 5 Earth days, backward spin)." },
+  { name: "Earth", type: "Terrestrial", class: "earth", orbit: 1.0,
+    desc: "Our home planet with life-supporting conditions and liquid water. Axial tilt: 23.44°. Moons: 1 (Moon). Rotation: 1 Earth day (0.2× of 5 Earth days)." },
+  { name: "Moon", type: "Natural Satellite", class: "moon", orbit: 0.0748,
+    desc: "Earth’s only natural satellite, tidally locked to always face us. Axial tilt: 6.68°. Moons: 0. Rotation: 27.3 Earth days (~5.46× slower than 5 Earth days)." },
+  { name: "Mars", type: "Terrestrial", class: "mars", orbit: 1.88,
+    desc: "The red planet with thin atmosphere and massive volcanoes. Axial tilt: 25.19°. Moons: 2 (Phobos, Deimos). Rotation: 1.03 Earth days (~0.21× of 5 Earth days)." },
+  { name: "Jupiter", type: "Gas Giant", class: "jupiter", orbit: 11.86,
+    desc: "Largest planet with powerful storms like the Great Red Spot. Axial tilt: 3.13°. Moons: 95 (Io, Europa, Ganymede, Callisto). Rotation: 0.41 Earth days (~0.08× of 5 Earth days)." },
+  { name: "Saturn", type: "Gas Giant", class: "saturn", orbit: 29.46,
+    desc: "Famous for its wide ring system made of ice and rock. Axial tilt: 26.73°. Moons: 146 (Titan, Enceladus, Rhea, Iapetus). Rotation: 0.45 Earth days (~0.09× of 5 Earth days)." },
+  { name: "Uranus", type: "Ice Giant", class: "uranus", orbit: 84.01,
+    desc: "An ice giant that rotates on its side due to extreme tilt. Axial tilt: 97.77°. Moons: 27 (Titania, Oberon, Umbriel, Ariel, Miranda). Rotation: 0.72 Earth days (~0.14× of 5 Earth days, retrograde)." },
+  { name: "Neptune", type: "Ice Giant", class: "neptune", orbit: 164.79,
+    desc: "A cold, distant world with the fastest winds in the solar system. Axial tilt: 28.32°. Moons: 14 (Triton, Nereid). Rotation: 0.67 Earth days (~0.13× of 5 Earth days)." },
+  { name: "Pluto", type: "Dwarf Planet", class: "pluto", orbit: 248.09,
+    desc: "A dwarf planet with icy plains and a large companion moon. Axial tilt: 122.5°. Moons: 5 (Charon, Styx, Nix, Kerberos, Hydra). Rotation: 6.39 Earth days (~1.28× slower than 5 Earth days, retrograde)." }
 ];
-
 const procedure = [
   "Download Blender",
   "Download resources (images, python scripts)",
