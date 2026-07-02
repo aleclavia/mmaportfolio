@@ -1231,12 +1231,42 @@ function goPage(pageId, wk = null) {
     currentWeek = wk; 
     updateWeekContent(); 
   }
+
+  if (pageId === 'solar') {
+    resetSolarSystem();
+  }
   
   const dropdown = document.getElementById('rotoDD');
   if (dropdown) dropdown.classList.remove('open');
   
   window.scrollTo(0, 0);
   return false;
+}
+
+function resetSolarSystem() {
+  const hero = document.getElementById('solarHero');
+  const video = document.getElementById('solarVideo');
+  if (!hero || !video) return;
+
+  hero.classList.add('is-intro');
+
+  video.pause();
+  video.currentTime = 0;
+  video.play().catch(() => {
+    console.log('Autoplay blocked on solar reset — waiting for interaction.');
+  });
+
+  document.querySelectorAll('#planetsGrid video').forEach(v => {
+    v.pause();
+    v.currentTime = 0;
+    v.play().catch(() => {});
+  });
+
+  document.querySelectorAll('.age-calc-exp input').forEach(input => { input.value = ''; });
+  document.querySelectorAll('.age-result-exp').forEach((el, idx) => {
+    const p = planets[idx];
+    if (p) el.innerText = `— ${p.name} yrs`;
+  });
 }
 
 function toggleDD() {
